@@ -6,7 +6,7 @@ import {
 
 class UserList extends Component {
   constructor() {
-    super();  
+    super();
     this.state = {
       users: []
     };  

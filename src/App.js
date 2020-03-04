@@ -8,11 +8,13 @@ import {
   useRouteMatch,
   useParams
 } from "react-router-dom";
-import UserList from './components/users';
 import { 
   Navbar,
   Nav
 } from 'react-bootstrap';
+import UserList from './components/users';
+import Login from './components/login';
+import Signup from './components/signup';
 
 
 class App extends Component {
@@ -32,6 +34,7 @@ class App extends Component {
               <Nav className="mr-auto">
                 <Nav.Link href="/">Home</Nav.Link>
                 <Nav.Link href="/users">Users</Nav.Link>
+                <Nav.Link href="/login">Login</Nav.Link>
               </Nav>
             </Navbar.Collapse>
           </Navbar>
@@ -40,9 +43,15 @@ class App extends Component {
             <Route path="/users">
               <UserList />
             </Route>
+            <Route path="/login">
+              <Login />
+            </Route>
+            <Route path="/signup">
+              <Signup />
+            </Route>
             <Route path="/">
               <h1>Home page</h1>
-            </Route>
+            </Route>            
           </Switch>
         </div>
       </Router>
