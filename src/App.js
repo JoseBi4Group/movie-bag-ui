@@ -16,8 +16,7 @@ import UserList from './components/users';
 import Login from './components/login';
 import Signup from './components/signup';
 import MovieList from './components/movies';
-
-const token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1ODMzMTEwMTUsIm5iZiI6MTU4MzMxMTAxNSwianRpIjoiZWQ1NWFjMjctMGU1NC00MTU4LWI4NjgtZWE1ZjAyYzZhNzU3IiwiZXhwIjoxNTgzOTE1ODE1LCJpZGVudGl0eSI6IjVlMTg2YmU3NzhhNTgxNzhiZjhlM2EyOSIsImZyZXNoIjpmYWxzZSwidHlwZSI6ImFjY2VzcyJ9.241O3IdFeBUSwDJkTAWt3N3sQWApkTKAuIqAU4xwdRM"
+import HomePage from './components/home';
 
 class App extends Component {
 
@@ -57,7 +56,7 @@ class App extends Component {
               <MovieList />
             </Route>
             <Route path="/">
-              <h1>Home page</h1>
+              <HomePage />
             </Route>            
           </Switch>
         </div>
