@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
 import './App.css';
-import Users from './components/users';
+import UserList from './components/users';
 
 class App extends Component {
 
-  state = {
-    users: []
+  constructor() {
+    super();
+    this.state = {
+      users: []
+    };
   }
-
+  
   componentDidMount() {
     fetch('http://localhost:5000/users')
     .then(res => res.json())
@@ -19,7 +22,7 @@ class App extends Component {
 
   render() {
     return (
-      <Users users={this.state.users} />
+      <UserList users={this.state.users} />
     );
   }
 }
