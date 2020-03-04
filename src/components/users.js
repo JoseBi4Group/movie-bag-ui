@@ -1,20 +1,36 @@
 import React, { Component } from 'react';
+import { 
+  Container,
+  Card
+} from 'react-bootstrap';
 
 class UserList extends Component {
-  constructor(props) {
-    super(props);    
+  constructor() {
+    super();  
+    this.state = {
+      users: []
+    };  
+  }
+
+  componentDidMount() {
+    fetch('http://localhost:5000/users')
+    .then(res => res.json())
+    .then((data) => {
+      this.setState({ users: data })
+    })
+    .catch(console.log)
   }
 
   render () {
     return (
-      <div>
+      <Container>
         <center><h1>User List</h1></center>
-        {this.props.users.map(u => {
+        {this.state.users.map(u => {
           return (                 
             <User email={u.email} />                  
           );
         })}
-      </div>
+      </Container>
     );
   }
 }
@@ -22,13 +38,9 @@ class UserList extends Component {
 class User extends Component {
   render () {
       return (
-        <div class="card">
-          <div class="card-body">                  
-            <h5 class="card-title">
-              {this.props.email}
-            </h5>                  
-          </div>
-        </div>         
+        <Card style={{marginBottom: '1rem'}}>
+          <Card.Body>{this.props.email}</Card.Body>
+        </Card>         
       );
   }
 }
