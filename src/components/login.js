@@ -18,6 +18,7 @@ class Login extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+
   handleChange(event){
     const target = event.target;
     const value = target.value;
@@ -43,7 +44,11 @@ class Login extends Component {
       }
     }).then(res => res.json())
     .catch(error => console.error('Error:', error))
-    .then(response => console.log('Success:', response));
+    .then(response => {
+      console.log('Success:', response);
+      // Save token on LocalStorage
+      localStorage.setItem('token', response.token);
+    });
   }
 
   render () {
