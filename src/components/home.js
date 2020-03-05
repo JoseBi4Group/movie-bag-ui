@@ -30,7 +30,7 @@ class Home extends Component {
             <Button variant="primary" size="lg" block href="/movies">
               List of movies
             </Button>
-            <Button variant="secondary" size="lg" block >
+            <Button variant="secondary" size="lg" block href="/movies/new">
               Create a new movie
             </Button>            
           </center>      
