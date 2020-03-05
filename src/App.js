@@ -15,7 +15,7 @@ import {
 import UserList from './components/users';
 import Login from './components/login';
 import Signup from './components/signup';
-import { MovieList, MovieNew} from './components/movies';
+import { MovieList, MovieNew, MovieEdit} from './components/movies';
 import HomePage from './components/home';
 
 class App extends Component {
@@ -58,6 +58,7 @@ class App extends Component {
             <Route exact path="/movies/new">
               <MovieNew />
             </Route>
+            <Route exact path="/movies/edit/:id" component={ MovieEdit }/>
             <Route path="/">
               <HomePage />
             </Route>            

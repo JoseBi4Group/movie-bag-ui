@@ -6,6 +6,7 @@ import {
   Alert,
   Form
 } from 'react-bootstrap';
+import { useParams } from "react-router-dom";
 
 // Get token from LocalStorage 
 const token = localStorage.getItem('token');
@@ -41,7 +42,7 @@ export class MovieList extends Component {
         {typeof(this.state.movies) != 'undefined' && this.state.movies.length > 0 ?
             this.state.movies.map(movie => {
                 return (                 
-                <Movie data={movie} />                  
+                <Movie data={movie} id={movie._id.$oid} />                  
                 );
             })
         : <Alert variant="info">No movies available</Alert>
@@ -100,29 +101,126 @@ export class MovieNew extends Component {
   }
 
   render () {
-      return (
-        <Container>
-          <center><h1>Create a new Movie</h1></center>
-          <Form onSubmit={this.handleSubmit}>
-            <Form.Group controlId="name">
-              <Form.Label>Movie name</Form.Label>
-              <Form.Control type="text" name="name" value={this.state.name} onChange={this.handleChange}/>
-            </Form.Group>
-            <Form.Group controlId="casts">
-              <Form.Label>Casting</Form.Label>
-              <Form.Control type="text" name="casts" value={this.state.casts} onChange={this.handleChange} placeholder="Type the actor's name sepparated by commas (for example: 'John, Mike, Emily')" />
-            </Form.Group>
-            <Form.Group controlId="casts">
-              <Form.Label>Genres</Form.Label>
-              <Form.Control type="text" name="genres" value={this.state.genres} onChange={this.handleChange} placeholder="Type the genres sepparated by commas (for example: 'Action, Comedy, Drama')" />
-            </Form.Group>
-            <Button variant="primary" type="submit">
-              Create
-            </Button>
-          </Form>  
-        </Container>   
-      );
+    return (
+      <Container>
+        <center><h1>Create a new Movie</h1></center>
+        <Form onSubmit={this.handleSubmit}>
+          <Form.Group controlId="name">
+            <Form.Label>Movie name</Form.Label>
+            <Form.Control type="text" name="name" value={this.state.name} onChange={this.handleChange}/>
+          </Form.Group>
+          <Form.Group controlId="casts">
+            <Form.Label>Casting</Form.Label>
+            <Form.Control type="text" name="casts" value={this.state.casts} onChange={this.handleChange} placeholder="Type the actor's name sepparated by commas (for example: 'John, Mike, Emily')" />
+          </Form.Group>
+          <Form.Group controlId="casts">
+            <Form.Label>Genres</Form.Label>
+            <Form.Control type="text" name="genres" value={this.state.genres} onChange={this.handleChange} placeholder="Type the genres sepparated by commas (for example: 'Action, Comedy, Drama')" />
+          </Form.Group>
+          <Button variant="primary" type="submit">
+            Create
+          </Button>
+        </Form>  
+      </Container>   
+    );
   }
+}
+
+export class MovieEdit extends Component {
+
+  constructor(props) {
+    super(props);
+
+    this.state={
+      id: this.props.match.params.id,
+      name: '',
+      casts: [],
+      genres: []
+    }
+
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  componentDidMount() {
+    fetch(`http://localhost:5000/movies/${this.state.id}`, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Authorization': 'Bearer ' + token,
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(res => res.json())
+    .then((data) => {
+        this.setState({ 
+          name: data.name,
+          casts: data.casts.join(','),
+          genres: data.genres.join(',')
+        })
+    })
+    .catch(console.log)
+  }
+
+  handleChange(event){
+    const target = event.target;
+    const value = target.value;
+    const name = target.name;
+
+    this.setState({
+      [name]: value
+    });
+  }
+
+  handleSubmit(event) {
+    event.preventDefault();
+    // Convert 'casts' and 'genres' strings to arrays
+    let data = {
+      name: this.state.name,
+      casts: this.state.casts.split(','),
+      genres: this.state.genres.split(',')
+    };
+
+    fetch(`http://localhost:5000/movies/${this.state.id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json'
+      }
+    }).then(res => res.json())
+    .catch(error => console.error('Error:', error))
+    .then(response => {
+      console.log('Success:', response);
+    });
+  }
+
+  render () {
+    return (
+      <Container>
+        <center><h1>Edit a Movie</h1></center>
+        <Form onSubmit={this.handleSubmit}>
+          <Form.Group controlId="name">
+            <Form.Label>Movie name</Form.Label>
+            <Form.Control type="text" name="name" value={this.state.name} onChange={this.handleChange}/>
+          </Form.Group>
+          <Form.Group controlId="casts">
+            <Form.Label>Casting</Form.Label>
+            <Form.Control type="text" name="casts" value={this.state.casts} onChange={this.handleChange} placeholder="Type the actor's name sepparated by commas (for example: 'John, Mike, Emily')" />
+          </Form.Group>
+          <Form.Group controlId="casts">
+            <Form.Label>Genres</Form.Label>
+            <Form.Control type="text" name="genres" value={this.state.genres} onChange={this.handleChange} placeholder="Type the genres sepparated by commas (for example: 'Action, Comedy, Drama')" />
+          </Form.Group>
+          <Button variant="primary" type="submit">
+            Create
+          </Button>
+        </Form>  
+      </Container>   
+    );
+  }
+
 }
 
 class Movie extends Component {
@@ -137,7 +235,7 @@ class Movie extends Component {
             <Card.Text>
               <b>Casting:</b> {this.props.data.casts.join(',')}
             </Card.Text>
-            <Button variant="outline-secondary" size="sm" href="#">Update</Button>{' '}
+            <Button variant="outline-secondary" size="sm" href={`/movies/edit/${this.props.id}`}>Update</Button>{' '}
             <Button variant="outline-danger" size="sm" href="#">Delete</Button>
           </Card.Body>
         </Card>       
